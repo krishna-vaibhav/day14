@@ -1,0 +1,10 @@
+Java mail demo tip
+In spring sending mail -- in case of  AuthenticationException
+For security purposes -By default, gmail does not allow less secure apps to get authenticated. You need to turn on the option in you gmail account to allow less secure apps to get authenticated.
+HOW ??
+Ans  --
+login to gmail
+then goto this url --- https://www.google.com/settings/security/lesssecureapps
+& turn on(radio btn) access allowed for less secure apps
+& then test send mail demo of spring
+

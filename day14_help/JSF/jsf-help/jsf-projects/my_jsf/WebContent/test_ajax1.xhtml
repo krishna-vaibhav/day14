@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+<title>Testing JSF N AJAX</title>
+</h:head>
+
+<h:body>
+	<h:form>
+		<h:panelGrid columns="2">
+			<h:outputText value="Enter text to echo back" />
+			<h:inputText id="inp_text" value="#{user_info.text}">
+				<f:ajax render="out_text out_count" event="keyup"
+					listener="#{user_info.myAjaxListener}" />
+				<!-- 	<f:ajax render="out_count" listener="#{user_info.myAjaxListener}" /> -->
+				<!-- 	</f:ajax> -->
+			</h:inputText>
+			<h:outputText value="Enter Name" />
+
+			<h:inputText id="u_nm" value="#{user_info.name}" />
+			<h:outputText value="Enter Prefs" />
+			<h:inputText id="u_prefs" value="#{user_info.prefs}" />
+			<h:commandButton value="Test AJAX">
+				<f:ajax execute="u_nm u_prefs" render="out" />
+			</h:commandButton>
+
+			<h:outputText id="out" value="#{user_info}" />
+			<h:outputText id="out_text" value="#{user_info.text.toUpperCase()}" />
+			<h:outputText id="out_count" value="#{user_info.count}" />
+		</h:panelGrid>
+	</h:form>
+</h:body>
+</html>

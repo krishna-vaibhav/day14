@@ -1,0 +1,97 @@
+JSF life cycle
+
+Regarding life cycle
+In order to understand how the framework masks the underlying request processing nature of the Servlet API and to analyze how JSF processes each request,  go through the JSF request processing lifecycle. This will allow you to build better applications.
+
+A JavaServer Faces page is represented by a tree of UI components, called a view. 
+
+view = tree of UI components.
+During the lifecycle, the JavaServer Faces implementation must build the view while considering state saved from a previous submission of the page. When the client submits a page, the JavaServer Faces implementation performs several tasks, such as validating the data input of components in the view and converting input data to types specified on the server side. The JavaServer Faces implementation performs all these tasks as a series of steps in the JavaServer Faces request–response life cycle.
+
+The phases of the JSF application lifecycle are as follows:
+	
+
+    Create / Restore view
+    Apply request values; process events
+    Process validations; process events
+    Update model values; process events
+    Invoke application; process events
+    Render response
+
+
+
+
+Note : Life – cycle handles two kinds of requests:
+
+    Initial request: A user requests the page for the first time.
+
+    Postback: A user submits the form contained on a page that was previously loaded into the browser as a result of executing an initial request.
+
+Phase 1 : Restore view
+
+View = UI component tree, with a root UI Component .
+
+In the RestoreView phase, JSF classes build the tree of UI components for the incoming request.
+
+    When a request for a JavaServer Faces page is made, such as when a link or a button is clicked, the JavaServer Faces implementation begins the restore view phase.
+    This is one of the trickiest parts of JSF: The JSF framework controller uses the view ID (=typically xhtml page name) to look up the components for the current view. If the view isn’t available, the JSF controller creates a new one. If the view already exists, the JSF controller uses it. The view contains all the GUI components and there is a great deal of state management by JSF to track the status of the view – typically using HTML hidden fields.
+    If the request for the page is an initial request, the JavaServer Faces implementation creates an empty view during this phase. Lifecycle only executes the create view and render response phases because there is no user input or actions to process.
+    If the request for the page is a postback, a view corresponding to this page already exists. During this phase, the JavaServer Faces implementation restores the view by using the state information saved on the client or the server. Lifecycle continues to execute the remaining phases.
+   
+
+
+Phase 2 : ApplyRequest values
+
+During ApplyRequest values, the request parameters are read and their values are used to set the values of the corresponding UI components. This process is called decoding.
+
+    If the conversion of the value fails, an error message associated with the component is generated and queued on FacesContext. This message will be displayed during the render response phase, along with any validation errors resulting from the process validations phase.
+    If some components on the page have their immediate event handling property is set to true, then the validation, conversion, and events associated with these components takes place in this phase instead of the Process Validations phase. 
+For example, you could have a Cancel button that ignores all values on a form. 
+
+
+Phase 3 : Process validations
+
+The Apply Validations phase triggers calls to all registered validators.
+
+    The components validate the new values coming from the request against the application's validation rules.
+    Any input can be scanned by any number of validators.
+    These Validators can be pre-defined or defined by the developer.
+    Any validation errors will abort the request–handling process and skip to rendering the response with validation and conversion error messages. 
+
+
+Phase 4 : Update Model Values
+
+The Update Model phase brings a transfer of state from the UI component tree to any and all backing beans, according to the value expressions defined for the components themselves.
+
+    It is in this phase that converters are invoked to parse string representations of various values to their proper primitive or object types. If the data cannot be converted to the types specified by the bean properties, the life cycle advances directly to the render response phase so that the page is re-rendered with errors displayed.
+   
+ Note: The difference between this phase and Apply Request Values - that phase moves values from client–side HTML form controls to server–side UI components; while in this phase the information moves from the UI components to the backing beans. 
+
+
+Phase 5 : Invoke Application
+
+The Invoke Application phase handles any application-level events. Typically this takes the form of a call to process the action event generated by the submit button that the user clicked.
+
+    Application level events handled
+    Application methods invoked
+    Navigation outcome calculated 
+
+
+Phase 6 : Render Response
+
+Finally, Render Response brings several inverse behaviors together in one process:
+
+    Values are transferred back to the UI components from the bean. Including any modifications that may have been made by the bean itself or by the controller.
+
+    The UI components save their state – not just their values, but other attributes having to do with the presentation itself. This can happen server–side, but by default state is written into the HTML as hidden input fields and thus returns to the JSF implementation with the next request.
+
+    If the request is a postback and errors were encountered during the apply request values phase, process validations phase, or update model values phase, the original page is rendered during this phase. If the pages contain message or messages tags, any queued error messages are displayed on the page. 
+
+
+Process Events
+
+In this phase, any events that occurred during the previous phase are handled.
+
+    Each Process Events phase gives the application a chance to handle any events (for example, validation failures) that occurred during the previous phase.
+
+Note: Sometimes, an application might need to redirect to a different web application resource, such as a web service, or generate a response that does not contain JavaServer Faces components. In these situations, the developer must skip the rendering phase (Render Response Phase) by calling FacesContext.responseComplete. 

@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<title>Show A/c Balance</title>
+	<h:outputStylesheet name="css/main.css" />
+</h:head>
+<h:form prependId="false">
+	<h:panelGrid columns="3" styleClass="my-table">
+		<h:outputLabel for="cust_id">Enter Customer ID </h:outputLabel>
+		<h:inputText id="cust_id" value="#{bankController.cust.id}"
+			required="true" requiredMessage="ID Must be supplied"
+			converterMessage="ID must be a number"
+			validatorMessage="ID must be between 100 to 1000">
+			<f:validateLongRange minimum="100" maximum="1000" />
+		</h:inputText>
+		<h:message for="cust_id" errorClass="error"></h:message>
+
+		<h:outputLabel for="cust_pass">Enter Customer Password </h:outputLabel>
+		<h:inputSecret id="cust_pass" value="#{bankController.cust.pass}"
+			required="true" requiredMessage=" Passsword Must be supplied"
+			validatorMessage="Invalid Password">
+			<f:validateRegex pattern="((?=.*\d)(?=.*[a-z])(?=.*[@#$%]).{5,10})" />
+			
+		</h:inputSecret>
+		<h:message for="cust_pass" styleClass="error" />
+
+		<h:commandButton value="Login" action="#{bankController.check}" />
+
+	</h:panelGrid>
+</h:form>
+</html>

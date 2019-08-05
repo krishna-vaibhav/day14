@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>User Reg Page</title>
+	<h:outputStylesheet name="css/main.css" />
+</h:head>
+<h:body>
+
+	<h:panelGrid columns="2" styleClass="my-table" border="2">
+		<h:outputText value="Value Passed" />
+		<h:outputText value="Output" />
+		<h:outputText value="100.12345" />
+		<h:outputText value="100.12345">
+			<f:convertNumber minFractionDigits="2" />
+		</h:outputText>
+		<h:outputText value="abc" />
+		<h:outputText value="abcd">
+			<f:convertNumber pattern="#0000.00" />
+		</h:outputText>
+		<h:outputText value="$100.345" />
+		<h:outputText value="$100.345">
+			<f:convertNumber currencySymbol="$" type="currency" />
+		</h:outputText>
+		<h:outputText value="100.12345%" />
+		<h:outputText value="100.12345%">
+			<f:convertNumber type="percent" />
+		</h:outputText>
+		<h:outputText value="#{test.joinDate}" />
+		<h:outputText value="#{test.joinDate}">
+			<f:convertDateTime pattern="dd-MMM-yyyy" />
+		</h:outputText>
+	</h:panelGrid>
+
+</h:body>
+</html>

@@ -1,0 +1,28 @@
+@CHARSET "UTF-8";
+
+
+
+
+
+.emp-table {
+	border-collapse: separate;
+}
+
+.emp-table-header {
+	text-align: center;
+	background: none repeat scroll 0 0 #E5E5E5;
+	border-bottom: 1px solid #BBBBBB;
+	padding: 16px;
+}
+
+.emp-table-odd-row {
+	text-align: center;
+	background: none repeat scroll 0 0 aqua;
+	border-top: 1px solid #BBBBBB;
+}
+
+.emp-table-even-row {
+	text-align: center;
+	background: none repeat scroll 0 0 lime;
+	border-top: 1px solid #BBBBBB;
+}

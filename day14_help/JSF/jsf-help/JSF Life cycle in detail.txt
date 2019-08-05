@@ -1,0 +1,69 @@
+Different Phases in a JSF Application
+It is very important to understand how a JSF application is initiated by a typical client such as a Web Browser along with the set of phases involved. Most of the different phases in a JSF Web Application is taken care by the JSF framework and only a minimal amount of burden is imposed on the application developers. The six different phases that are involved in a
+JSF application are as follows,
+View Restoration
+Applying the Request Values
+Validation of User Inputs
+Updating the Model objects
+Execution of Application Logic
+Rendering the Response to the Clients
+Let us have a brief discussion about the several phases one by one.
+1) View Restoration
+Before getting into details of the various set of actions that happens in this phase, let us define what a View is in JSF terms. In JSF terminology, a View represents the tree of UI components. Assume a typical e-mail application, which is asking the user to enter the details like email-id and the password. Also there is a submit button which is there to carry the request information from the client to server after the user has filled-in the necessary details.
+ eg : there is a form in the page with 3 controls, 2 for the Text-Field holding the email-id and the password and 1 for the Action button. In this context, a View represents the tree of components that are available in the page. The view along with the components is stored in the server so that the state of the UI components is automatically managed.
+
+eg : UIView Root -- 
+        UIForm 
+          TextField,PasswordField,CommandButton
+
+Before understanding what the view restoration phase will do, let us see the various components and interactions involved in a JSF Web-Application. In a Web Application, thousands and thousands of requests may come from the clients. Each and every different request may display different page to the user. Every page often has an entirely different View (Tree of UI Components) associated with it. And each view within the page may have separated UI Components which may have Validators, Converters, Listeners and Managed Beans.
+Every JSF Request is often associated with a context called JSF Context(javax.faces.context.FacesContext). The JSF Context stores the entire graph of view. The primary responsibility of this View Restoration phase is to identify the Current View and to restore this current view from the JSF Context.
+(FacesContextFactory holds a map : key View Id --name of the Facelet , Value JSFContext for this View --where UIView root is stored )
+ If no such view is found in the JSF Context, then this phase will create a new View which hold all the related UI components and associates all the different elements and then places it in the JSF Context.
+Upon client request, the View may either be newly created or it can be restored from the current JSF Context, so this phase has been termed as View Restoration phase.
+2) Applying the Request Values
+View Restoration Phase has ended and the client has been presented with a nice view wherein which he/she is ready to input the appropriate values. After the client has entered the input data, the data is set or it is mapped to corresponding UI Component. Taking the sample example that we had in the View Restoration Phase, The First component is the Text-Field component with some unique identifier, say “emailIdTextField” and the next Text-Field component is represented by the identifier “passwordTextField”.
+Whenever the user submits the values by clicking the submit button, JSF will iterate over the tree of components, pick up every component and sets the corresponding values to the right component that are submitted by the User. So, after the end of this phase, all the values that are submitted by the client will be set to the appropriate UI Components taken from the View with the help of the Faces Context.
+(called as decoding)
+3) Validation of User Inputs
+In this phase, all the inputs that are submitted by the client user will be converted & validated for their correctness. JSF will iterate over all the UI components in the UI Tree and will call the Default converters n Validators as well as any of the Custom Validators that have been provided to the component. Assume that in the email-id text field, user is allowed to enter only in the following format, username@somedomain.com.
+For this type of application specific validation, we can define something called EMailValidator to check whether the user input matches the correct email format. Either kind of validation is possible, Direct validation which is dedicated only for the particular component as well as Delegated Validation. The result of this phase may end  up in the next phase Updating the Model Objects being called or it may direct JSF to the last phase which is the Rendering Response Phase. Assume that the user has entered an invalid email-id in which a case, the application will display appropriate Error Messages back to the user. It means that some kind of Error-Response has been given back to the user which is nothing but the Render Response Phase.
+It is worthwhile to mention that two possible set of actions can occur in this phase apart from validations. One is Pre-Conversion Operation and the other one is the Post-Event Operation. As mentioned, all the input values from the client are sent to the server only as string values. Some kind of objects called Converters must be there to convert whatever input the client sent. Say a date value in the client UI has to be converted into a Date object before proceeding with the processing. Even there is a possibility that Events may be triggered as a result of values being changed; in such a case Value-Changed Events will be fired.
+
+ 
+4) Updating the Model objects
+Managed Beans form the Model Objects in a JSF application. Assume that in the mail application, we have represented a form containing two text-fields namely email-id and password. For this, we may have written a Bean class called UserInfoBean encapsulating the values of email-id and password.
+The next question that arises in mind immediately is who will take care of mapping the two Text-Field values to the two String properties inside the UserInfo bean. The answer has become very simple because of EL expressions. An UI  component can be mapped directly against a Java Bean Property declaratively in the definition of the UI component.
+For example, consider the code following code snippet,
+
+<h:inputText id = "emailIdTextField" value = "#{UserInfoBean.emailId}"/>
+
+The above code declares an input component of type ‘Text-Field’ with an identifier ‘emailIdTextField’. It has one more important attribute called value. This attribute is populated with a string called #{UserInfoBean.emailId}. This is essentially an EL Expression which tells to associate the value of the email-id text-field to the property name called emailId in the class UserInfoBean. Synchronizing an UI Component Value with that of a Bean Property is as simple like this.
+5) Execution of Application Logic
+If you remember that in the second phase Apply Request Values, we saw that as soon as the values from the input fields are applied to the corresponding UI components events will be generated. Only the events will be generated in that phase. The generated event won’t be notified to all the listeners who have registered for the events. The events in the second phase will be notified to all the listeners (if any) in this phase only. Remember that in JSF, all the UI components often have their Default Listeners associated with them.
+Take the example of a Button Control. This UI component, by default will have an ActionListener associated with it. Whenever user clicks this button control, an event called action event will be generated. For example, if the model Bean Object has been registered to receive the events, then the corresponding event handler will be called in this phase
+Consider the following snippet code,
+
+<h:commandButton id = "submitButton" value = "Submit the Form"     action= "#{UserInfoBean.someMethod}"/>
+
+
+In the above example, a button control with the display names ‘Submit the Form’ has an attribute called action with value #{UserInfoBean.someMethod}. As mentioned before, this is a JSF EL Expression, which will resolve to a  method called someMethod inside a bean class UserInfoBean as follows
+
+class UserInfoBean{
+
+    public String submitButtonClicked(){
+      // request handling logic here --equivalent to spring controller bean
+      if(success)
+        return "details";
+      else "login";
+     
+
+    }
+
+}
+As we can see from the above snippet code, the someMethod() -- typically non-void returning method --toString -- decides dynamic navigational result
+6) Rendering the Response
+Now, it’s time to render (display) the response back to the client application in the Rendering the Response phase and this is the last phase in the life-cycle. One more thing to note is that before sending the response data to the client, JSF implementations store the View (which represents the Tree of UI components) in the Faces Context object, so that it can be restored back by the View Restore back when the request comes to the same page.
+In JSF, there is a clear separation between the data representation and the display of the UI Components. More specifically, the UI components that we talked about don’t have the implementation of how they can be displayed. They will just represent the properties and the behaviors of the control. The rendering is handled separately by Renderer Components in JSF in the form of Renderer Kits.
+Assume that there are two types of client application, one is the traditional HTML Browser which can understand and interprets HTML, and the other is the Mobile Browser which can interpret only WML. So, they will be two separate rendering kits namely the HTML Rendering Kit and the WML Rendering Kit. Sun’s JSF implementation comes with the Standard HTML Rendering Kit. The entire API for HTML rendering is available in the javax.faces.component.html.
+Third party vendors can  plug-in the rendering Kits for WML (or for any other kind of display).

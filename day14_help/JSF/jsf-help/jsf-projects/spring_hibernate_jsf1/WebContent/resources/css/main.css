@@ -1,0 +1,26 @@
+@CHARSET "UTF-8";
+
+.body {
+	font-family: verdana;
+	font-size: x-small;
+	background: aqua;
+}
+
+.errorMessage {
+	color: red;
+	font-family: serif;
+	font-size: 15px;
+	font-style: italic;
+}
+
+.infoMessage {
+	color: blue;
+}
+
+.warnMessage {
+	color: orange;
+}
+
+.header {
+	font-size: 32px
+}

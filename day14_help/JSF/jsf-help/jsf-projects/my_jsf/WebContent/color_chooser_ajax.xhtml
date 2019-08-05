@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<title>Color Changing With AJAX</title>
+	<h:outputStylesheet name="css/main.css" />
+</h:head>
+<h:body>
+	<h1>Choose Colour</h1>
+
+	<f:ajax execute="inp" render=":square">
+		<h:form>
+			<h:panelGrid id="inp" columns="3">
+				<h:commandButton value="Blue" action="#{color_chooser.blue}" />
+				<h:commandButton value="Red" action="#{color_chooser.red}" />
+				<h:commandButton value="Green" action="#{color_chooser.green}" />
+			</h:panelGrid>
+		</h:form>
+	</f:ajax>
+	<h:panelGrid id="square">
+		<div style="background-color: #{color_chooser.color}" class="box" />
+				(Colour changed at #{color_chooser.currentTime})
+			</h:panelGrid>
+	<p>(Page loaded at #{color_chooser.currentTime})</p>
+</h:body>
+</html>

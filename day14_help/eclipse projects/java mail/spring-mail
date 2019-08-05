@@ -1,0 +1,24 @@
+Steps 
+1. Create spring web mvc project.
+2. Create separate spring bean config file to add spring mail sender bean settings.-- <resources> / email-settings.xml
+Import this cofig xml file in master config file(spring-servlet.xml)
+<import resource="classpath:/email-settings.xml"/>
+
+3. Inject Mail sender bean in your Controller to send the email.
+HOW ?
+In your Controller , inject dependency.
+@AutoWired
+private JavaMailSender sender; ---- injects byType ---JavaMailSenderImpl class instance.
+Its an abstraction to hide the complex details of actually sending/receving the mail using javax.mail API 
+
+Java mail demo tip
+In spring sending mail -- in case of  AuthenticationException
+For security purposes -By default, gmail does not allow less secure apps to get authenticated. You need to turn on the option in you gmail account to allow less secure apps to get authenticated.
+
+Solution
+
+login to gmail
+then goto this url --- https://www.google.com/settings/security/lesssecureapps
+& turn on(radio btn) access allowed for less secure apps
+& then test send mail demo of spring
+

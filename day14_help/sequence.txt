@@ -1,0 +1,78 @@
+1. Revise AOP & demo --exam objective
+
+1.5 Regarding redirect scenario
+In your controller ,
+@PostMapping(....)
+{
+ ....
+   return "/user/details"; ---in the SAME request D.S forwards the clnt to view layer ---<WEB-INF>\pages\user\details.jsp
+(DOESn't need any addtional methodin the controller)
+   vs 
+   return "redirect:/user/details" --- D.S invokes sendRedirect + encoding URL -- sends immediate resp to clnt browser.
+Clnt browser sends NEW request --- ...../day14/user/details
+---D.S --- H.M -- UserController : showDetails 
+
+Add a method in the controller 
+@GetMapping("/details")
+public String showDetails()
+{
+   return "/user/details";
+}
+OR how to reduce multiple such "forward-to-view-layer" methods to a single one?
+
+@GetMapping("/{abc}")
+public String forwardToViewLayer(@PathVariable String abc)
+{
+ return "/user/"+abc;
+}
+
+solve : return "redirect:/user/details" 
+return "redirect:/user/category" 
+return "redirect:/user/profile" 
+--------------------------------
+
+2. Spring MVC with bootstrap --project help
+If you consider a spring mvc configuration where all the requests are mapped to a DispatcherServlet. You can categorize those requests as requests for static and dynamic resources.
+
+The requests for dynamic resources are matched by what you program inside your controller methods, and they are the subject of the typical framework processing such as path matching, content negotiation, validation, binding, conversion, formating, argument resolving.
+
+The requests for static resources are the requests for .js, .css, images or some other resources that are not getting created rather already exist deployed with your application. They are not handled by the programmatic controller methods rather by the ResourceHttpRequestHandler, simply because they have a completly different set of processing actions comparing to dynamic request (apart from path matching). You can define the location of static files for the given mapping 
+----------------------
+Servlet Filter  --exam
+
+Struts --exam
+
+3. Spring MVC with image upload & download  --project & refer to readme
+----------------------------
+JSF -- Java server Faces  exam
+
+jsp:include (RD's include scenario)
+
+JSP custom tags
+----------------------------
+Ref : eclipse project -- spring_demo (project)
+Spring form tags
+Sending mail
+I18N
+-------------------
+
+JNDI -- exam help
+
+
+Hibernate advanced topics for projects
+
+one-to-one (Entity to Entity) --bi dir
+many-to-many (Entity to Entity) --bi dir
+composite PK
+inheritance in hibernate
+
+
+
+Spring Boot (needs net connection)
+
+
+Design patterns
+
+Core java help
+
+

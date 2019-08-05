@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>User Registration Using JSF Tags</title>
+	<h:outputStylesheet name="css/main.css" />
+</h:head>
+
+
+<h:body styleClass="body">
+
+	<h:form>
+		<h:panelGrid columns="3">
+			<h:outputText value="Enter User Email" />
+			<h:inputText id="em" value="#{cust.contact.email}" required="true"
+				requiredMessage="Email Must be supplied">
+				<f:validateLength minimum="4" maximum="10" />
+			</h:inputText>
+			<h:message for="em"/>
+			<h:outputText value="Enter User Password" />
+			<h:inputSecret id="pa" value="#{cust.contact.password}" required="true"
+				requiredMessage="Password Must be supplied">
+			<!-- 	[a-zA-Z0-9_]*[@]{1}[a-zA-Z0-9_]*[.]{1}[a-zA-Z]{2,3} -->
+				<f:validateRegex pattern="[a-zA-Z0-9]*[*$#@]{1}" />
+			</h:inputSecret>
+			<h:message for="pa"/>
+			<h:outputText value="Enter Amount" />
+			<h:inputText id="amt" value="#{cust.contact.regAmount}" required="true"
+				requiredMessage="Reg amount Must be supplied">
+				<f:convertNumber minFractionDigits="1" />
+			</h:inputText>
+			<h:message for="amt"/>
+			<h:outputText value="Reg date(dd-mm-yr)" />
+			<h:inputText id="rd" value="#{cust.contact.regDate}" required="true"
+				requiredMessage="Reg Date Must be supplied">
+				<f:convertDateTime pattern="dd-MM-yyyy"/>
+			</h:inputText>
+			<h:message for="rd"/>
+			<h:outputText id="role" value="Enter Role" />
+			<h:selectOneListbox  size="1" value="#{cust.contact.role}" required="true"
+				requiredMessage="Role Must be selected">
+				<f:selectItem itemLabel="Administrator" itemValue="admin" />
+				<f:selectItem itemLabel="Customer" itemValue="cust" />
+			</h:selectOneListbox>
+			<h:message for="role"/>
+
+			<h:commandButton value="Register User"
+				action="#{cust.registerContact}" />
+			<h:commandButton type="reset" value="Reset" />
+
+		</h:panelGrid>
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	<title>Input Page</title>
+</h:head>
+<h:body>
+
+	<h:form>
+		<h:panelGrid columns="3">
+			<h:outputText value="Enter ID" />
+			<h:inputText id="cust_id" value="#{bank.custModel.id}"
+				required="true" requiredMessage="ID must be supplied"
+				converterMessage="ID Must be a Number"
+				validatorMessage="ID must be in the range of 100 - 500">
+				<f:validateLongRange minimum="100" maximum="500" for="cust_id" />
+			</h:inputText>
+			<h:message for="cust_id" />
+			<h:outputText  value="Enter Password" />
+			<h:inputSecret id="cust_pass" value="#{bank.custModel.pass}" required="true"
+				requiredMessage="Password must not be blank">
+				<f:validateRegex pattern="((?=.*\d)(?=.*[a-z])(?=.*[@#$%]).{5,10})"
+					for="cust_pass" />
+			</h:inputSecret>
+			<h:message for="cust_pass" />
+			<h:commandButton value="Login" action="#{bank.validateUser}" />
+		</h:panelGrid>
+	</h:form>
+</h:body>
+</html>

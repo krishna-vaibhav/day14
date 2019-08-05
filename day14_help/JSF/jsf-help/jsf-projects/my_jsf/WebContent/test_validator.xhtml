@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>User Reg Page</title>
+	<h:outputStylesheet name="css/main.css" />
+</h:head>
+<h:body>
+	<h:form>
+		<h:panelGrid columns="3" styleClass="my-table">
+			<h:outputText value="User Name" />
+			<h:inputText id="user_nm" value="#{user1.name}"
+required="true"
+				requiredMessage="Name must be supplied">
+				<f:validateLength minimum="5" maximum="8" />
+			</h:inputText>
+			<h:message for="user_nm" errorClass="error"/>
+
+			<h:outputText value="Deposit Amount" />
+			<h:inputText id="user_amt" value="#{user1.amount}" 
+			validatorMessage="Amount must be within 1000.5 and 10000.5">
+				<f:validateDoubleRange minimum="1000.50" maximum="10000.50" />
+			</h:inputText>
+			<h:message for="user_amt" errorClass="error"></h:message>
+
+			<h:outputText value="Password" />
+			<h:inputSecret id="user_pass" value="#{user1.pass}" validatorMessage="Invalid Password format" required="true"
+				requiredMessage="Password must be supplied" >
+				<f:validateRegex pattern="((?=.*[a-z]).{6,})" />
+			</h:inputSecret>
+			<h:message for="user_pass" errorClass="error"></h:message>
+			
+			<h:outputText value="Reg Date" />
+			<h:inputText id="user_date" value="#{user1.regDate}">
+			<f:convertDateTime pattern="dd-MMM-yyyy" />
+				<f:validator validatorId="my_date_validator"/>
+			</h:inputText>
+			<h:message for="user_date" errorClass="error"/>
+
+			<h:commandButton value="Register"
+			 action="#{user1.registerMe}" />
+
+		</h:panelGrid>
+	</h:form>
+</h:body>
+
+</html>

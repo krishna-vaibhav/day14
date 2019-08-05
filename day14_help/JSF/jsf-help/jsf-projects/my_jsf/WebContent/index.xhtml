@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<title>Testing JSF</title>
+	<h:outputStylesheet name="css/main.css" />
+</h:head>
+<h:body>
+	<h:panelGrid styleClass="my-table">
+		<h:link value="Test JSF" outcome="hello" />
+		<h:link value="Test CSS n Images" outcome="hello1" />
+		<!-- Usage of Managed Property -->
+		<h:link value="Register User" outcome="register" />
+		<!-- Usage of built in converter, validators , messages 
+		n service layer appln scoped bean -->
+		<h:link value="Bank Login" outcome="bank_login" />
+		<h:link value="Built In Converters" outcome="test_converter" />
+		<h:link value="Custom Converters" outcome="url_input" />
+		<h:link value="Built In n Custom Validators" outcome="test_validator" />
+		<h:link value="Testing Action Event" outcome="bank_login2" />
+		<h:link value="Testing w/o Ajax" outcome="test_without_ajax" />
+		<h:link value="Testing with Ajax" outcome="test_with_ajax" />
+		<h:link value="Change Color w/o Ajax" outcome="color_chooser" />
+		<h:link value="Change Color with Ajax" outcome="color_chooser_ajax" />
+	
+	</h:panelGrid>
+</h:body>
+</html>

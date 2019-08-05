@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	<title>Input Page</title>
+</h:head>
+<h:body>
+
+	<h:form>
+		<h:panelGrid columns="2">
+			<h:outputText value="Enter Name" />
+			<h:inputText value="#{hello.name}" />
+			<h:commandButton value="Say Hello" action="#{hello.sayHello}" />
+			<h:commandButton value="Say Good Bye" action="#{hello.sayBye}" />
+		</h:panelGrid>
+	</h:form>
+</h:body>
+</html>

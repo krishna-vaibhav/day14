@@ -1,0 +1,7 @@
+Reference project -- spring_mvc_hibernate_bootstrap
+
+1. Copy bootstrap(css)/jquery/.... & js under <WebContent> or  better answer --- under root of web application(webapp in maven)
+2. Check <mvc:resources> entry under spring-servlet.xml
+This entry tells spring container about the location of your static resources.
+3. Check my JSP , where I am using bootstrap classes.
+spring_mvc_hibernate_bootstrap\WebContent\WEB-INF\views

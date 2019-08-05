@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<title>Testing JSF Spring Integration</title>
+	<h:outputStylesheet name="css/data-table.css" />
+</h:head>
+<h:body>
+	<h:inputHidden value="#{cust.viewContacts()}" />
+	<h:form>
+		<h:dataTable value="#{cust.contacts}" var="e" styleClass="emp-table"
+			headerClass="emp-table-header"
+			rowClasses="emp-table-odd-row,emp-table-even-row">
+
+			<h:column>
+				<f:facet name="header">Email</f:facet>
+					#{e.email}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Reg Amount</f:facet>
+					#{e.regAmount}
+				</h:column>
+			<h:column>
+				<f:facet name="header">Reg Date</f:facet>
+					#{e.regDate}
+			</h:column>
+			<h:column>
+			<f:facet name="header"></f:facet>
+				<h:commandLink value="Delete" action="#{cust.deleteContact(e.id)}" />
+			</h:column>
+		</h:dataTable>
+	</h:form>
+	<h:link value="Register User" outcome="user_register" />
+</h:body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+	<title>Page Title</title>
+</h:head>
+<h:body>
+	<h:form>
+		<h:panelGrid columns="2">
+			<h:outputText value="Enter First Name" />
+			<h:inputText value="#{stud.firstName}" />
+			<h:outputText value="Enter Last Name" />
+			<h:inputText value="#{stud.lastName}" />
+			<h:outputText value="Enter Password" />
+			<h:inputSecret value="#{stud.pass}" />
+			<h:outputText value="Choose Country" />
+			<h:selectOneMenu value="#{stud.country}">
+				<f:selectItems value="#{applicationScope.countries}" />
+			</h:selectOneMenu>
+			<h:outputText value="Choose Favourite Language" />
+			<h:selectOneRadio value="#{stud.language}">
+				<f:selectItems value="#{applicationScope.languages}" />
+			</h:selectOneRadio>
+			<h:outputText value="Choose Technologies" />
+			<h:selectManyCheckbox value="#{stud.chosenTechno}">
+			<f:selectItems value="#{applicationScope.technologies}"/>
+			</h:selectManyCheckbox>
+			<h:commandButton action="stud_registered" value="Register Me" />
+		</h:panelGrid>
+	</h:form>
+</h:body>
+</html>

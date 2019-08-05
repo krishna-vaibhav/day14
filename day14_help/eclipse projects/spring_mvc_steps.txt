@@ -1,0 +1,233 @@
+1. MVC overview
+2. Demo ---
+Create New  Dyn web project, create user library(add lib in build path & dep assembly) ,configure DispatcherServlet in web.xml --- to ensure all or any req coming from clnt will be intercepted by this servlet
+ <servlet>
+   <servlet-name>spring</servlet-name>
+<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+   <load-on-startup>1</load-on-startup>
+   </servlet>
+   <servlet-mapping>
+   <servlet-name>spring</servlet-name>
+   <url-pattern>/</url-pattern>
+   </servlet-mapping>
+create master spring configuration file ---- Name ---- servletName-servlet.xml under <web-inf> ---- add beans,context , mvc & p namespaces.
+2.1 Add tags -- context:annotation-config,context:component-scan,mvc:annotation-driven(to enable annotated MVC controller support)
+2.2 declare view resolver bean  --- Can use InternalResourceViewResolver or its super-class ---UrlBasedViewResolver --- Props are same for both beans --- viewClass(choose JSTL view for JSP view templates using JSTL actions), prefix -- typically under web-inf & suffix -- .jsp
+<bean id="viewResolver"		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+p:prefix="/WEB-INF/views/" p:suffix=".jsp" 		p:viewClass="org.springframework.web.servlet.view.JstlView" />
+
+2.3 Write Hello Controller
+
+Annotations used --- @Controller(class level) & @RequestMapping(add at method level ---& pass only URL value)
+eg -- @RequestMapping("/hello") . Ret type -string --represents logical  view name --- will get resolved by viewResolver bean.
+
+2.4 Add to same controller , one more  req handling method -- @RequestMapping("/welcome1") & ret type as ModelAndView. 
+Using M&V constructor --- set model obj & view name --- test it.
+
+2.5 Add 1 more method --- ret Type String BUT annotated with @ResponseBody
+-- tells SC -- not to pass it to view (JSP) layer, but directly add ret val as resp data & commit response.
+-------------------------------------------------------------------
+
+3. Objective ---In Contact management Utility --- Contact  authentication using Login form. 
+Layers used ---
+3.1 -- POJO (Contact) --email,password,name,regDate,regAmt
+3.2 -- Sevice layer bean -- @Service annotation -- i/f & implmenation class -- 
+constr -- create & populate HM with contacts.  B.L  method ----validateContact -- i/p -- contact with email & password , o/p --- validated pojo or null
+3.3 -- Controller bean -- @Controller annotated methods
+1. For displaying form --- create empty model instance
+API of org.springframework.ui.Model --represents request scoped attribute map
+How to add attribute--
+public Model addAttribute(Object attributeValue) -- attr name is derived from attribute value class type eg --- UserPOJO ---userPOJO
+OR 
+addAttribute(String attributeName,Object attributeValue)
+
+After adding model attribute --- return logical name of jsp page --- to navigate user to view layer.
+
+3.4 Create login page using spring form tag lib & for displaying validation errs add style tag -- under <head><style>
+.error {
+color: red
+}
+</style>
+</head>
+eg of spring form tags
+<form:form method="post" modelAttribute="contact"> --- name of the model attr=request scoped attr name(similar to model driven approach in sturts2) -- def name is command
+<form:label path="email">Enter User Email</form:label> --label as with ui comp
+<form:input path="email" /> --- path --name of the rq param name
+<form:errors cssClass="error" path="email" />
+
+3.5 Since action is typically not mentioned -- its submitted to same controller
+supply different req mapping method --- use method=RequestMethod.POST -- for processing the form. 
+min method args --POJO ref, BindingResult(org.springframework.validation.BindingResult), HttpSession hs -- if validated pojo needs to be stored in session scope.
+-- in method --always check first for P.L errors --
+API of BindingResult 
+boolean hasErrors() -- rets true in case of P.L errors. -- in this navigate user to input page.
+In absence of P.L erros -- invoke service layer method -- in case of success --store dtls under session scope & navigate user to success page. -- 
+3.6 Give logout link from success page -- in logout controller method -- 
+min args required ---org.springframework.web.bind.support.SessionStatus
+API of SessionStatus --
+void setComplete() --- to discard session.
+
+4. How to add P.L validations?
+Annotations based approach ---
+4.1 -- Add validation annotations in POJO class.
+(ref : from templates.txt)
+4.2 -- in the request handling method of Controller --- in the form processing --- (3.5)
+simply add @Valid annotation for POJO class reference -- which will force SC to apply validation rules mentioned in annotated POJO class & BindingResult i/f is populated with validation results . 
+
+
+
+
+4.3 Problem in above scenarios is -- in case of validation failures --- page will display spring's default err mesgs.
+How to add custom err messages & perform validation using annotations?
+1. Add entry in xml config file (spring-servlet.xml)  --define name of message resource bundle.
+
+<bean id="messageSource"		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+<property name="basename" value="classpath:messages" />
+</bean>
+NOTE -- bean id must be messageSource & can be declared either in spring-servlet.xml (i.e root xml for dispatcher servlet) or imported xml file.
+
+2. Add  property file & see error msgs derived from property file.
+How to ?
+syntax for property name = constraint name.model attr name.model prop name
+eg 
+NotEmpty.user.name=Name is required
+or in case of  invalid date format ---
+typeMismatch.java.util.Date=Invalid date format 
+
+5. How to add automatic exc handling support in spring MVC ?
+Add following bean definition in spring-servlet.xml
+
+<!-- spring supplied bean for exc handling -->
+<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+ <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">exc-handler</prop>
+            </props>
+ </property>
+    </bean>
+
+Above describes centralized exc handler page .(exc-handler.jsp)
+
+
+------------
+6. Spring From Tags examples -- import spring form tag library
+1.<form:input path="name" />
+2. <form:password path="password" />
+3.<form:radiobutton path="gender" value="M" label="M" />
+4.  <form:radiobuttons  path="favSport" items="${sportList}">
+5.  <form:select path="country">
+ <form:option value="0" label="Select Country" />
+ <form:options items="${countryList}" itemValue="countryId"    itemLabel="countryName" />
+</form:select>
+where countryList -- is model attribute of type List<Country> & Country has 
+countryId & countryName -- as properties.
+6  <form:checkboxes  path="team" items="${teamsList}">  
+7 <form:textarea path="aboutYou" />
+
+
+6. How to add I18N support?
+
+Internationalization is the process of designing a software application so that it can potentially be adapted to various languages and regions without engineering changes. 
+Localization is the process of adapting internationalized software for a specific region or language by adding locale-specific components and translating text .
+
+Spring frameworkgives you LocaleResolver bean to support the internationalization and thus localization as well. 
+
+6.1. Add locale resolver bean definition in spring-servlet.xml file.
+SessionLocaleResolver
+
+SessionLocaleResolver resolves locales by inspecting a predefined attribute in a user’s session. If the session attribute doesn’t exist, this locale resolver determines the default locale from the accept-language HTTP header.
+
+<bean id="localeResolver" 		class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+
+6.1.5 Add mvc interceptors for detecting change in locale
+ 
+LocaleChangeInterceptor interceptor detects if a special parameter is present in the current HTTP request. The parameter name can be customized with the paramName property of this interceptor. If such a parameter is present in the current request, this interceptor changes the user’s locale according to the parameter value.
+
+<!-- Declare the Interceptors -->
+<mvc:interceptors>
+<!-- Locale change interceptor -->
+<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"
+p:paramName="locale123" />
+</mvc:interceptors>
+
+Above 2 can be either declared in spring-servlet.xml or also in imported xml file.
+
+
+6.2 Create copies of message based property files 
+
+6.3 Create JSP with links to add support for various locales -- using same param name
+<spring:url var="url" value="test_locale">
+<spring:param name="locale123">en</spring:param>
+</spring:url>
+<a href="${url}">English</a>
+6.4 Use <spring:message>
+
+7. How to serve static resources?
+Eg : CSS,JavaScript or images.
+
+Configure a handler for serving static resources in spring-servlet.xml.
+<mvc:resources mapping="/**" location="/" />
+
+For applying CSS
+<link rel="stylesheet" href="<spring:url value='/css/main.css'/>" type="text/css" />
+
+
+8 How to add content(file) uploading feature?
+ Spring supports multipart i.e file uploading. Spring has built-in multipart support for file uploads in web applications. 
+
+ A multipart content is the content with enctype=”multipart/form-data”.
+(def HTML form encoding type : application/x-www-form-urlencoded)
+
+API 
+ Interface : org.springframework.web.multipart.MultipartResolver  
+One  implementation of the MultipartResolver i/f is  Commons FileUpload
+
+Spring CommonsMultipartResolver is a MultipartResolver implementation for use with Apache Commons FileUpload. 
+Additional jar required --  apache commons-fileupload.jar 
+
+Steps  to enable the Spring multipart handling:
+
+1. Add a multipart resolver bean to the web application’s context(either directly in spring-servlet.xml or import from separate file)
+<bean id="multipartResolver"		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+<property name="maxUploadSize" value="1000000" />
+</bean>
+
+2. Spring provides org.springframework.web.multipart.MultipartFile which is a representation of an uploaded file received in a multipart request. It provides handy methods like getName(), getContentType(), getBytes(), getInputStream() etc.. which make it easier while retrieving information about file being uploaded.
+Ref : javadocs.
+
+Create a wrapper POJO having MutipartFile as a state(data member)
+(not mandatory) 
+
+3. Write a controller .
+3.1 Add req handling method to show upload form
+Add POJO instance to the Model map (model attribute)
+
+4. Create JSP view with a form (form:form) having same model attribute & encType="multipart/form-data"
+
+Add <input type="file" path="prop name of POJO"/>
+
+OR can be done also by a simple form.
+
+5. In the same controller add req handling method to process upload form
+Use MultipartFile API to transfer file from temp location or memeory to permanent file on server.
+
+API of MultipartFile
+
+String getContentType()
+String getOriginalFileName()
+byte[] getBytes()
+long getSize()
+public static void copy(byte[] in,File out) throws IOException
+
+
+
+
+Meaning 
+Each request is inspected to see if it contains a multipart.
+If no multipart is found, the request continues as expected.
+If a multipart is found in the request, the MultipartResolver that has been declared in your context is used. The multipart attribute in your request is treated like any other attribute.
+
+
+
+
+
